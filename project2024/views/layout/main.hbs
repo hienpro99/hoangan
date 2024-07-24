@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{pageTitle}}</title>
+  <!-- Link Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <style>
+      body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .header {
+      background-color: #343a40;
+      color: #fff;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header .header-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+
+    .header .header-links {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .header .header-links a {
+      color: #ccc;
+      text-decoration: none;
+      margin-right: 10px;
+    }
+
+    .header .header-links a:hover {
+      color: #fff;
+    }
+     .sidebar .list-group-item {
+      background-color: transparent;
+      border-color: transparent;
+      color: #ccc;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .sidebar .list-group-item:hover {
+      background-color: #0761bb;
+      color: #fff;
+    }
+
+    .sidebar .list-group-item.active {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    .custom-logo {
+      height: 50px;
+      width: 200px;
+      margin-right: 20px;
+    }
+    .list-group-item.active {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .sidebar {
+      background-color: #343a40;
+      border-right: 1px solid #dee2e6;
+      padding-right: 15px;
+    }
+    main {
+      height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <header class="bg-dark text-white py-4 mb-4 d-flex justify-content-between align-items-center">
+      <!-- Phần trái: Logo -->
+      <div>
+        <img src="https://giaodich.f88.vn/img/logo.f1169cf2.svg" alt="Logo" class="custom-logo">
+        <span class="h4">{{pageTitle}}</span>
+      </div>
+      <!-- Phần phải: Thanh tìm kiếm và user đăng nhập -->
+      <div class="d-flex">
+        <form class="form-inline mr-3">
+          <input class="form-control mr-sm-2" type="search" placeholder="Tìm kiếm" aria-label="Search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Tìm kiếm</button>
+        </form>
+        <div class="ml-3">
+          <a href="#" class="text-white">Đăng nhập</a> | <a href="#" class="text-white">Đăng ký</a>
+        </div>
+      </div>
+    </header>
+    <div class="row">
+      <div class="col-md-3 sidebar">
+        <div class="list-group">
+          <a href="/dashboard" class="list-group-item list-group-item-action">
+            <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+          </a>
+          <a href="/add-profile" class="list-group-item list-group-item-action">
+            <i class="fas fa-user-plus mr-2"></i> Thêm hồ sơ
+          </a>
+          <a href="/manage-profiles" class="list-group-item list-group-item-action">
+            <i class="fas fa-users-cog mr-2"></i> Quản lý hồ sơ
+          </a>
+           <a href="/manage-cars" class="list-group-item list-group-item-action">
+            <i class="fas fa-cars-cog mr-2"></i> Quản lý Xe
+          </a>
+            <a href="/manage-cars" class="list-group-item list-group-item-action">
+            <i class="fas fa-cars-cog mr-2"></i> Thống Kê
+          </a>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <main class="p-4">
+          <!-- Nội dung của trang -->
+          {{{body}}}
+        </main>
+      </div>
+    </div>
+  </div>
+  <!-- Link Bootstrap JS và các script khác -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var currentLocation = window.location.pathname;
+
+      var listItems = document.querySelectorAll(".list-group-item");
+
+      listItems.forEach(function(item) {
+        var itemLocation = item.getAttribute("href");
+
+        // Kiểm tra nếu đường dẫn của mục menu trùng với đường dẫn hiện tại
+        if (currentLocation === itemLocation) {
+          item.classList.add("active"); // Thêm lớp active
+        }
+      });
+    });
+  </script>
+</body>
+</html>

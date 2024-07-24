@@ -1,0 +1,53 @@
+{{!< main}}
+<title>Thêm hồ sơ</title>
+<h1 class="text-center">Thêm hồ sơ</h1>
+<!-- Nội dung của thêm hồ sơ-->
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <!-- Alert cảnh báo -->
+        {{#if errorMessage}}
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage }}
+        </div>
+        {{/if}}
+
+        <form action="/add-profile" method="POST">
+          <div class="form-group">
+            <label for="cccd">Số CCCD</label>
+            <input type="text" class="form-control" id="cccd" name="cccd" placeholder="Nhập số CCCD" value="{{ cccd }}">
+          </div>
+          <div class="form-group">
+            <label for="fullname">Họ và tên</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Nhập họ và tên" value="{{ fullname }}">
+          </div>
+          <div class="form-group">
+            <label for="dob">Ngày sinh</label>
+            <input type="date" class="form-control" id="dob" name="dob" value="{{ dob }}">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Tiếp tục</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hiển thị card dữ liệu nếu profile đã tồn tại -->
+{{#if existingProfile}}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-6">
+    <div class="card shadow">
+      <div class="card-body text-center">
+        <h5 class="card-title">Thông tin hồ sơ đã tồn tại</h5>
+        <p class="card-text mb-1"><strong>Số CCCD:</strong> {{ existingProfile.cccd }}</p>
+        <p class="card-text mb-1"><strong>Họ và tên:</strong> {{ existingProfile.fullname }}</p>
+        <p class="card-text mb-3"><strong>Ngày sinh:</strong> {{formatDate existingProfile.dob }}</p>
+        <form action="/recover-profile" method="POST">
+          <button type="submit" class="btn btn-primary">Lấy Lại</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/if}}

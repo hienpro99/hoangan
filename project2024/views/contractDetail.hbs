@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Hợp Đồng</title>
+  <!-- Link Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Link Lightbox CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <style>
+    .custom-detail {
+      max-width: 2000px; /* Điều chỉnh chiều rộng tối đa */
+      margin: auto;
+      padding: 20px;
+    }
+
+    .contract-images img {
+      max-width: 100px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .status-overdue {
+      color: rgb(243, 219, 0);
+    }
+
+    .status-closed {
+      color: rgb(173, 2, 2);
+    }
+
+    .action-buttons a {
+      margin-right: 10px;
+      text-decoration: none;
+    }
+
+    .action-buttons a i {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mt-5 custom-detail">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Chi Tiết Hợp Đồng Số {{contract.contractNumber}}</h5>
+        <p class="{{#if isClosed}} status-closed {{else}} status-overdue {{/if}}">
+          <strong>Trạng thái Hợp Đồng:</strong> {{contract.status}}
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>CCCD:</strong> {{profile.cccd}}</p>
+            <p><strong>Họ và tên:</strong> {{profile.fullname}}</p>
+            <p><strong>Ngày sinh:</strong> {{formatDate profile.dob}}</p>
+            <p><strong>Số điện thoại:</strong> {{contract.phone}}</p>
+            <p><strong>Địa chỉ:</strong> {{contract.address}}</p>
+            <p><strong>Biển số xe:</strong> {{contract.licensePlate}}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Ngày thuê từ ngày:</strong> {{formatDate contract.rentalStartDate}}</p>
+            <p><strong>Đến ngày:</strong> {{formatDate contract.rentalEndDate}}</p>
+            <p><strong>Người tham chiếu:</strong></p>
+            <ul class="list-unstyled">
+              {{#each contract.referees}}
+              <li>{{this.name}} - {{this.phone}}</li>
+              {{/each}}
+            </ul>
+            <p><strong>Hình Ảnh Hồ Sơ:</strong></p>
+            <div class="contract-images">
+              {{#each contract.images}}
+              <a href="{{this}}" data-lightbox="contract-images">
+                <img src="{{this}}" class="img-thumbnail" alt="Hình ảnh hợp đồng">
+              </a>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+
+        <div class="action-buttons mt-3">
+          {{#if isClosed}}
+          <a href="/reopen-contract/{{contract.contractNumber}}" class="btn btn-success">
+            <i class="fas fa-undo"></i> Mở hợp đồng mới
+          </a>
+          {{else}}
+          <!-- Nút trigger để hiển thị dialog cảnh báo -->
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmCloseModal">
+            <i class="fas fa-lock"></i> Đóng hợp đồng
+          </button>
+          {{/if}}
+          <a href="/manage-profiles" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal xác nhận đóng hợp đồng -->
+  <div class="modal fade" id="confirmCloseModal" tabindex="-1" role="dialog" aria-labelledby="confirmCloseModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmCloseModalLabel">Xác nhận đóng hợp đồng</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Bạn có chắc chắn muốn đóng hợp đồng này không?
+        </div>
+        <div class="modal-footer">
+          <!-- Nút xác nhận đóng hợp đồng -->
+          <form action="/close-contract/{{contract.contractNumber}}" method="POST">
+            <button type="submit" class="btn btn-danger">Đồng ý</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Bootstrap JS và các script khác -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <!-- Link Lightbox JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+</body>
+
+</html>

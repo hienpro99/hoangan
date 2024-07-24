@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhập thông tin theo hợp đồng</title>
+  <!-- Link Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    /* Custom styles */
+    .custom-form {
+      max-width: 600px;
+      margin: auto;
+    }
+    .custom-label {
+      font-weight: bold;
+    }
+    .custom-submit-btn {
+      margin-top: 20px;
+    }
+    .uploaded-images {
+      margin-top: 20px;
+    }
+    .uploaded-images img {
+      max-width: 100px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .delete-image-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: white;
+      border: none;
+      padding: 2px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Nhập thông tin theo hợp đồng số {{ contract }}</h5>
+          </div>
+          <div class="card-body">
+            <!-- Hiển thị thông tin từ Profile -->
+            <p><strong>Số CCCD:</strong> {{ profile.cccd }}</p>
+            <p><strong>Họ và tên:</strong> {{ profile.fullname }}</p>
+            <p><strong>Ngày sinh:</strong> {{ formatDate profile.dob }}</p>
+
+            <!-- Form nhập thông tin -->
+            <form action="/input-info/{{ contract }}" method="POST" enctype="multipart/form-data" class="custom-form">
+              <!-- Số điện thoại -->
+              <div class="form-group">
+                <label for="phone" class="custom-label">Số điện thoại</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+              </div>
+              <!-- Địa chỉ hiện tại -->
+              <div class="form-group">
+                <label for="address" class="custom-label">Địa chỉ hiện tại</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ hiện tại" required>
+              </div>
+              <!-- Biển số xe thuê -->
+              <div class="form-group">
+                <label for="licensePlate" class="custom-label">Biển số xe thuê</label>
+                <input type="text" class="form-control" id="licensePlate" name="licensePlate" placeholder="Nhập biển số xe thuê" required>
+              </div>
+              <!-- Ngày thuê -->
+              <div class="form-group">
+                <label for="rentalStartDate" class="custom-label">Ngày thuê từ ngày</label>
+                <input type="date" class="form-control" id="rentalStartDate" name="rentalStartDate" required>
+              </div>
+              <div class="form-group">
+                <label for="rentalEndDate" class="custom-label">Đến ngày</label>
+                <input type="date" class="form-control" id="rentalEndDate" name="rentalEndDate" required>
+              </div>
+              <!-- Thông tin 3 người tham chiếu -->
+              <div class="form-group">
+                <label class="custom-label">Thông tin 3 người tham chiếu</label>
+                <div class="row">
+                  <div class="col">
+                    <input type="text" class="form-control mb-2" name="refereeName1" placeholder="Tên người tham chiếu 1" required>
+                    <input type="tel" class="form-control" name="refereePhone1" placeholder="Số điện thoại người tham chiếu 1" required>
+                  </div>
+                  <div class="col">
+                    <input type="text" class="form-control mb-2" name="refereeName2" placeholder="Tên người tham chiếu 2" required>
+                    <input type="tel" class="form-control" name="refereePhone2" placeholder="Số điện thoại người tham chiếu 2" required>
+                  </div>
+                  <div class="col">
+                    <input type="text" class="form-control mb-2" name="refereeName3" placeholder="Tên người tham chiếu 3" required>
+                    <input type="tel" class="form-control" name="refereePhone3" placeholder="Số điện thoại người tham chiếu 3" required>
+                  </div>
+                </div>
+              </div>
+              <!-- Nút tải lên tài liệu -->
+              <div class="form-group">
+                <label class="custom-label">Tải lên tài liệu</label>
+                <input type="file" class="form-control-file" id="documentImages" name="documentImages" accept="image/*" multiple required>
+              </div>
+              <!-- Khay hiển thị hình ảnh đã tải lên -->
+              <div class="uploaded-images">
+                <p><strong>Hình ảnh đã tải lên:</strong></p>
+                <div id="uploadedImagesContainer"></div>
+              </div>
+              <!-- Nút submit -->
+              <button type="submit" class="btn btn-primary custom-submit-btn">Hoàn thành</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Link Bootstrap JS và các script khác -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <!-- Script để hiển thị hình ảnh đã tải lên và xóa -->
+  <script>
+    // Function to display uploaded images
+    function displayUploadedImages(input, containerId) {
+      const files = input.files;
+      const container = document.getElementById(containerId);
+      container.innerHTML = ''; // Clear previous images
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const imgContainer = document.createElement('div');
+        imgContainer.classList.add('position-relative');
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.classList.add('img-thumbnail');
+        imgContainer.appendChild(img);
+
+        // Add delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('delete-image-btn');
+        deleteBtn.innerHTML = '<span>&times;</span>';
+        deleteBtn.addEventListener('click', function() {
+          imgContainer.remove(); // Remove image container
+        });
+        imgContainer.appendChild(deleteBtn);
+
+        container.appendChild(imgContainer);
+      }
+    }
+
+    // Event listener for file input
+    document.getElementById('documentImages').addEventListener('change', function() {
+      displayUploadedImages(this, 'uploadedImagesContainer');
+    });
+  </script>
+</body>
+</html>
